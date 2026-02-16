@@ -1,0 +1,278 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhai's Surprise Spin</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --bg: #f9fafb;
+        }
+
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 15% 15%, #e0e7ff 0%, transparent 35%),
+                              radial-gradient(circle at 85% 85%, #fef3c7 0%, transparent 35%);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            position: absolute;
+            opacity: 0;
+            transform: translateY(25px) scale(0.96);
+            pointer-events: none;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        h1, h2 { font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 0; }
+        p { color: var(--text-muted); line-height: 1.6; font-size: 1.05rem; }
+
+        /* Professional Styled Buttons */
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            padding: 0.9rem 1.8rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+        }
+
+        .btn-next { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2); }
+        .btn-next:hover { transform: translateY(-2px); background: #4338ca; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3); }
+        
+        .btn-yes { background: var(--success); color: white; min-width: 120px; }
+        .btn-no { background: var(--danger); color: white; min-width: 120px; position: relative; }
+
+        .hidden-item { display: none !important; }
+
+        /* Wheel Styles */
+        .wheel-area {
+            position: relative;
+            width: 290px;
+            height: 290px;
+            margin: 1.5rem auto;
+        }
+
+        .pointer-arrow {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #1f2937;
+            z-index: 20;
+        }
+
+        canvas {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 6px solid #1f2937;
+            transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
+        }
+
+        textarea {
+            width: 100%; height: 110px;
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid #d1d5db;
+            font-family: 'Inter', sans-serif;
+            margin-top: 1rem;
+            resize: none;
+            outline: none;
+            font-size: 1rem;
+        }
+        textarea:focus { border-color: var(--primary); ring: 2px solid var(--primary); }
+
+        #spin-msg { font-weight: 600; color: var(--primary); display: block; min-height: 1.5rem; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="step1" class="card active">
+        <h1>Surprise for You! 🎁</h1>
+        <p>I have planned something special for you. Kya aap taiyaar hain?</p>
+        <button class="btn btn-next" onclick="moveFrame('step1', 'step2', true)">Next: Start Karo</button>
+    </div>
+
+    <div id="step2" class="card">
+        <h2 id="qTitle">Kya main best bhai hoon? 🤔</h2>
+        <div id="qButtons" style="margin-top: 2rem;">
+            <button class="btn btn-yes" onclick="correctChoice()">Haan!</button>
+            <button id="noButton" class="btn btn-no" onmouseover="btnRun()">Nahi</button>
+        </div>
+        <button id="nextToWheel" class="btn btn-next hidden-item" onclick="moveFrame('step2', 'step3')">Next: Spin the Wheel</button>
+    </div>
+
+    <div id="step3" class="card">
+        <span id="spin-msg">Spin karke dekho kya jeet-te ho!</span>
+        <div class="wheel-area">
+            <div class="pointer-arrow"></div>
+            <canvas id="wheel" width="500" height="500"></canvas>
+        </div>
+        <button id="spinBtn" class="btn btn-next" onclick="spinMe()">SPIN NOW</button>
+        <p id="leftSpins" style="font-size: 0.9rem;">Remaining: 3 spins</p>
+        
+        <button id="nextToMsg" class="btn btn-next hidden-item" onclick="moveFrame('step3', 'step4')">Next: Final Step</button>
+    </div>
+
+    <div id="step4" class="card">
+        <h2>Message for Pankaj ❤️</h2>
+        <p>Kaisa laga surprise? Apna feedback neeche likhein.</p>
+        <textarea id="msgBody" placeholder="Type your message here..."></textarea>
+        <button class="btn btn-next" onclick="sendMail()">Finish & Send Email</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const music = document.getElementById('bgMusic');
+        let rotation = 0;
+        let count = 0;
+
+        const prizeOptions = [
+            { label: "₹5 UPI", color: "#6366f1" },
+            { label: "Better Luck", color: "#94a3b8" },
+            { label: "Golden Poop 💩", color: "#f59e0b" },
+            { label: "Chocolate", color: "#ec4899" },
+            { label: "Party Time", color: "#10b981" },
+            { label: "Try Again", color: "#475569" }
+        ];
+
+        function drawWheel() {
+            const arc = (2 * Math.PI) / prizeOptions.length;
+            prizeOptions.forEach((p, i) => {
+                ctx.beginPath();
+                ctx.fillStyle = p.color;
+                ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 250, i * arc, (i + 1) * arc);
+                ctx.fill();
+                ctx.save();
+                ctx.translate(250, 250);
+                ctx.rotate(i * arc + arc/2);
+                ctx.fillStyle = "white";
+                ctx.font = "bold 26px Inter";
+                ctx.textAlign = "right";
+                ctx.fillText(p.label, 230, 10);
+                ctx.restore();
+            });
+        }
+        drawWheel();
+
+        function moveFrame(curr, next, playAudio = false) {
+            if(playAudio) music.play().catch(() => {});
+            document.getElementById(curr).classList.remove('active');
+            setTimeout(() => {
+                document.getElementById(next).classList.add('active');
+            }, 450);
+        }
+
+        function btnRun() {
+            const btn = document.getElementById('noButton');
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * 70 + 15 + '%';
+            btn.style.top = Math.random() * 70 + 15 + '%';
+            document.getElementById('qTitle').innerText = "Wrong answer! Dubara socho... 😂";
+        }
+
+        function correctChoice() {
+            document.getElementById('qTitle').innerText = "I knew it! Main hi best hoon. 😎👑";
+            document.getElementById('qButtons').classList.add('hidden-item');
+            document.getElementById('nextToWheel').classList.remove('hidden-item');
+        }
+
+        function spinMe() {
+            if (count >= 3) return;
+            const btn = document.getElementById('spinBtn');
+            btn.disabled = true;
+            count++;
+
+            let target = 0;
+            let feedback = "";
+
+            if (count === 1) { target = 0; feedback = "Wah! You won ₹5 UPI! 💸"; }
+            else if (count === 2) { target = 1; feedback = "Oops! Better Luck Next Time! 😜"; }
+            else if (count === 3) { target = 2; feedback = "JACKPOT! Golden Poop 💩 Mila!"; }
+
+            const segAngle = 360 / prizeOptions.length;
+            const stopPoint = 270 - (target * segAngle + segAngle / 2);
+            const rotateVal = 360 * 5 + stopPoint;
+            
+            const finalRot = Math.ceil(rotation / 360) * 360 + rotateVal;
+            rotation = finalRot;
+            canvas.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(() => {
+                document.getElementById('spin-msg').innerText = feedback;
+                document.getElementById('leftSpins').innerText = `Remaining: ${3 - count} spins`;
+                
+                if (count === 3) {
+                    showFirecrackers();
+                    btn.classList.add('hidden-item');
+                    document.getElementById('nextToMsg').classList.remove('hidden-item');
+                } else {
+                    btn.disabled = false;
+                }
+            }, 4000);
+        }
+
+        function showFirecrackers() {
+            const end = Date.now() + 3000;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#4f46e5', '#10b981'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#4f46e5', '#10b981'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        function sendMail() {
+            const text = document.getElementById('msgBody').value;
+            window.location.href = `mailto:1733pankaj@Gmail.com?subject=Surprise Response&body=${encodeURIComponent(text)}`;
+        }
+    </script>
+</body>
+</html>
