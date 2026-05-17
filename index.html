@@ -40,20 +40,10 @@
             border: 1px solid rgba(214, 175, 54, 0.15);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
         }
-        .gold-glow {
-            box-shadow: 0 0 30px rgba(214, 175, 54, 0.2);
-        }
-        .gold-glow-hover:hover {
-            box-shadow: 0 0 40px rgba(214, 175, 54, 0.4);
-            border-color: rgba(214, 175, 54, 0.6);
-        }
-        .card-inner {
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .memory-card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
+        .gold-glow { box-shadow: 0 0 30px rgba(214, 175, 54, 0.2); }
+        .gold-glow-hover:hover { box-shadow: 0 0 40px rgba(214, 175, 54, 0.4); border-color: rgba(214, 175, 54, 0.6); }
+        .card-inner { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .memory-card.flipped .card-inner { transform: rotateY(180deg); }
     </style>
 </head>
 <body class="min-h-screen text-slate-200 font-sans flex items-center justify-center overflow-hidden relative px-4">
@@ -71,7 +61,7 @@
         <p class="text-slate-400 font-light leading-relaxed mb-8 text-sm md:text-base">
             Greetings. Someone has initiated a highly customized, multi-level interactive experience exclusively for you. 
         </p>
-        <button onclick="moveLevel('lvl1', 'lvl2', true)" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover active:scale-95">
+        <button onclick="moveLevel('lvl1', 'lvl2', true)" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover active:scale-95 cursor-pointer">
             Initialize Protocol
         </button>
     </div>
@@ -80,14 +70,14 @@
         <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Protocol 01/04</div>
         <h2 id="qTitle" class="font-serif text-2xl text-amber-100 mb-8 min-h-[64px]">Is Pankaj the ultimate brother on this planet?</h2>
         <div id="qButtons" class="flex flex-col sm:flex-row justify-center gap-4 mb-2">
-            <button onclick="clearLvl2()" class="px-8 py-3 rounded-xl bg-amber-500 text-slate-950 font-semibold text-sm uppercase tracking-wider hover:bg-amber-400 gold-glow">
+            <button onclick="clearLvl2()" class="px-8 py-3 rounded-xl bg-amber-500 text-slate-950 font-semibold text-sm uppercase tracking-wider hover:bg-amber-400 gold-glow cursor-pointer">
                 Absolutely
             </button>
-            <button id="noButton" onmouseover="dodgeButton()" onclick="dodgeButton()" class="px-8 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-medium text-sm uppercase tracking-wider">
+            <button id="noButton" onmouseover="dodgeButton()" onclick="dodgeButton()" class="px-8 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-medium text-sm uppercase tracking-wider cursor-pointer">
                 Debatable
             </button>
         </div>
-        <button id="nextToLvl3" onclick="moveLevel('lvl2', 'lvl3')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+        <button id="nextToLvl3" onclick="moveLevel('lvl2', 'lvl3')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden cursor-pointer">
             Proceed to Sphere
         </button>
     </div>
@@ -102,12 +92,12 @@
             <canvas id="wheel" width="500" height="500" class="w-full h-full rounded-full border-4 border-slate-900 shadow-2xl shadow-black"></canvas>
         </div>
         
-        <button id="spinBtn" onclick="spinWheel()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
+        <button id="spinBtn" onclick="spinWheel()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover cursor-pointer">
             Trigger Spin
         </button>
         <p id="leftSpins" class="text-xs text-slate-500 font-light mt-4">Clearance Attempts Remaining: 3</p>
         
-        <button id="nextToLvl4" onclick="moveLevel('lvl3', 'lvl4')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+        <button id="nextToLvl4" onclick="moveLevel('lvl3', 'lvl4')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden cursor-pointer">
             Proceed to Matrix
         </button>
     </div>
@@ -118,25 +108,25 @@
         <span id="matrix-msg" class="text-xs text-slate-400 font-light block mb-6">Match the twin golden relics to decode data</span>
         
         <div class="grid grid-cols-2 gap-4 max-w-[240px] mx-auto mb-6">
-            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '👑')">
+            <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '👑')">
                 <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
                     <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
                     <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">👑</div>
                 </div>
             </div>
-            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '💎')">
+            <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '💎')">
                 <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
                     <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
                     <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">💎</div>
                 </div>
             </div>
-            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '👑')">
+            <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '👑')">
                 <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
                     <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
                     <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">👑</div>
                 </div>
             </div>
-            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '💎')">
+            <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '💎')">
                 <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
                     <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
                     <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">💎</div>
@@ -144,7 +134,7 @@
             </div>
         </div>
 
-        <button id="nextToLvl5" onclick="moveLevel('lvl4', 'lvl5')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+        <button id="nextToLvl5" onclick="moveLevel('lvl4', 'lvl5')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden cursor-pointer">
             Proceed to Bypass
         </button>
     </div>
@@ -159,11 +149,11 @@
             <div id="laserPin" class="absolute top-0 bottom-0 w-1 bg-amber-400 shadow-[0_0_10px_#f59e0b] left-[0%]"></div>
         </div>
 
-        <button id="lockBtn" onclick="lockFrequency()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
+        <button id="lockBtn" onclick="lockFrequency()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover cursor-pointer">
             Lock Frequency Node
         </button>
 
-        <button id="nextToLvl6" onclick="moveLevel('lvl5', 'lvl6')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+        <button id="nextToLvl6" onclick="moveLevel('lvl5', 'lvl6')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden cursor-pointer">
             Open Terminal
         </button>
     </div>
@@ -177,40 +167,46 @@
         
         <textarea id="msgBody" placeholder="Type your secure response transmission here..." class="w-full h-32 rounded-xl bg-slate-950/80 border border-slate-800 p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400/60 font-light text-sm resize-none tracking-wide leading-relaxed shadow-inner"></textarea>
         
-        <button onclick="transmitMail()" class="w-full py-4 rounded-xl bg-amber-500 text-slate-950 font-semibold tracking-[0.2em] text-xs uppercase gold-glow mt-6 active:scale-95">
+        <button onclick="transmitMail()" class="w-full py-4 rounded-xl bg-amber-500 text-slate-950 font-semibold tracking-[0.2em] text-xs uppercase gold-glow mt-6 active:scale-95 cursor-pointer">
             Transmit Secure Telex
         </button>
     </div>
 
     <script>
-        // --- Safe Navigation System (Bulletproof) ---
+        // --- Bulletproof Anti-Freeze Navigation System ---
         function moveLevel(currentId, nextId, startMusic = false) {
-            try {
-                if(startMusic) {
-                    let audio = document.getElementById('bgMusic');
-                    if(audio) {
-                        let playPromise = audio.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => { console.log("Audio play prevented by browser"); });
-                        }
-                    }
-                }
-            } catch(e) { console.log(e); }
-            
             const currEl = document.getElementById(currentId);
             const nextEl = document.getElementById(nextId);
             
-            currEl.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
-            currEl.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
-            currEl.style.zIndex = "0";
-            
-            setTimeout(() => {
-                nextEl.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
-                nextEl.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
-                nextEl.style.zIndex = "10";
+            // 1. UI Transition First (So it never freezes)
+            if (currEl && nextEl) {
+                currEl.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                currEl.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+                currEl.style.zIndex = "0";
                 
-                if(nextId === 'lvl5') startLaserGame();
-            }, 400);
+                setTimeout(() => {
+                    nextEl.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+                    nextEl.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                    nextEl.style.zIndex = "10";
+                    
+                    if(nextId === 'lvl5') startLaserGame();
+                }, 400);
+            }
+
+            // 2. Audio Play Second (In background, safely)
+            if (startMusic) {
+                setTimeout(() => {
+                    try {
+                        let audio = document.getElementById('bgMusic');
+                        if (audio) {
+                            let playPromise = audio.play();
+                            if (playPromise !== undefined) {
+                                playPromise.catch(e => console.log("Audio prevented, but UI still works"));
+                            }
+                        }
+                    } catch(e) {}
+                }, 100);
+            }
         }
 
         // --- Challenge 1 Logic ---
@@ -342,15 +338,4 @@
                     positionX += 1.5;
                     if(positionX >= 100) movingForward = false;
                 } else {
-                    positionX -= 1.5;
-                    if(positionX <= 0) movingForward = true;
-                }
-                pin.style.left = positionX + '%';
-                gameLoopId = requestAnimationFrame(animateLaser);
-            }
-            gameLoopId = requestAnimationFrame(animateLaser);
-        }
-
-        function lockFrequency() {
-            if(isBypassed) return;
-  
+   
