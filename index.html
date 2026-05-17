@@ -1,262 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Premium Experience</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        body {
-            background-color: #080b11;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
-            margin: 0;
-            overflow-x: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #e2e8f0;
-        }
-        .luxury-card {
-            background: rgba(15, 22, 36, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(214, 175, 54, 0.15);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
-            border-radius: 2rem;
-            padding: 2.5rem;
-            text-align: center;
-            width: 100%;
-            max-width: 28rem;
-            margin: 0 auto;
-        }
-        .gold-glow { box-shadow: 0 0 30px rgba(214, 175, 54, 0.2); transition: all 0.3s ease; }
-        .gold-glow-hover:hover { box-shadow: 0 0 40px rgba(214, 175, 54, 0.4); border-color: rgba(214, 175, 54, 0.6); transform: translateY(-2px); }
-        
+        body { background: #080b11 radial-gradient(circle at 0% 0%, rgba(212,175,55,0.05) 0%, transparent 40%); color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; margin: 0; }
+        .luxury-card { background: rgba(15,22,36,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(214,175,54,0.15); border-radius: 2rem; padding: 2.5rem; text-align: center; max-width: 28rem; margin: 0 auto; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        .gold-glow:hover { box-shadow: 0 0 40px rgba(214,175,54,0.4); border-color: rgba(214,175,54,0.6); transform: translateY(-2px); transition: all 0.3s; cursor: pointer; }
         .card-inner { transform-style: preserve-3d; transition: transform 0.6s ease; width: 100%; height: 100%; position: relative; }
-        .memory-card.flipped .card-inner { transform: rotateY(180deg); }
+        .flipped .card-inner { transform: rotateY(180deg); }
         .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; }
         .card-front { background: #0f172a; border: 1px solid #1e293b; }
-        .card-back { background: #161f30; border: 1px solid rgba(214, 175, 54, 0.4); transform: rotateY(180deg); font-size: 2.25rem; }
+        .card-back { background: #161f30; border: 1px solid rgba(214,175,54,0.4); transform: rotateY(180deg); font-size: 2.25rem; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-    <audio id="bgMusic" loop>
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
     <div id="lvl1" style="display: block; width: 100%;">
         <div class="luxury-card">
             <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Exclusive Access</div>
-            <h1 style="font-family: 'Cinzel', serif;" class="text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-amber-200 to-amber-500 tracking-wide mb-6">
-                The Vault
-            </h1>
+            <h1 style="font-family:'Cinzel',serif;" class="text-3xl text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-500 mb-6">The Vault</h1>
             <div class="w-12 h-[1px] bg-amber-400/30 mx-auto mb-6"></div>
-            <p class="text-slate-400 font-light leading-relaxed mb-8 text-sm md:text-base">
-                Greetings. Someone has initiated a highly customized, multi-level interactive experience exclusively for you. 
-            </p>
-            <button onclick="changeScreen('lvl1', 'lvl2', true)" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Initialize Protocol
-            </button>
+            <p class="text-slate-400 font-light mb-8 text-sm">Greetings. Someone has initiated a highly customized, multi-level interactive experience exclusively for you.</p>
+            <button onclick="changeScreen('lvl1', 'lvl2', true)" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Initialize Protocol</button>
         </div>
     </div>
 
     <div id="lvl2" style="display: none; width: 100%;">
         <div class="luxury-card">
             <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Protocol 01/04</div>
-            <h2 id="qTitle" style="font-family: 'Cinzel', serif;" class="text-2xl text-amber-100 mb-8 min-h-[64px]">Is Pankaj the ultimate brother on this planet?</h2>
-            
+            <h2 id="qTitle" style="font-family:'Cinzel',serif;" class="text-2xl text-amber-100 mb-8 min-h-[64px]">Is Pankaj the ultimate brother on this planet?</h2>
             <div id="qButtons" class="flex flex-col sm:flex-row justify-center gap-4 mb-2">
-                <button onclick="clearLvl2()" class="px-8 py-3 rounded-xl bg-amber-500 text-slate-950 font-semibold text-sm uppercase tracking-wider hover:bg-amber-400 gold-glow relative z-50">
-                    Absolutely
-                </button>
-                <button id="noButton" onmouseover="dodgeButton()" onclick="dodgeButton()" class="px-8 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-medium text-sm uppercase tracking-wider transition-all duration-200">
-                    Debatable
-                </button>
+                <button onclick="clearLvl2()" class="px-8 py-3 rounded-xl bg-amber-500 text-slate-950 font-semibold text-sm uppercase gold-glow">Absolutely</button>
+                <button id="noButton" onmouseover="dodgeButton()" onclick="dodgeButton()" class="px-8 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-medium text-sm uppercase transition-all">Debatable</button>
             </div>
-            
-            <button id="nextToLvl3" onclick="changeScreen('lvl2', 'lvl3')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Proceed to Sphere
-            </button>
+            <button id="nextToLvl3" onclick="changeScreen('lvl2', 'lvl3')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Proceed to Sphere</button>
         </div>
     </div>
 
     <div id="lvl3" style="display: none; width: 100%;">
         <div class="luxury-card">
             <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-2 font-medium">Protocol 02/04</div>
-            <h2 style="font-family: 'Cinzel', serif;" class="text-2xl text-amber-100 mb-1">Sphere of Fortune</h2>
-            <span id="spin-msg" class="text-xs text-amber-400/60 tracking-wider block min-h-[20px] mb-4">Spin to determine your clearance tier</span>
-            
+            <h2 style="font-family:'Cinzel',serif;" class="text-2xl text-amber-100 mb-1">Sphere of Fortune</h2>
+            <span id="spin-msg" class="text-xs text-amber-400/60 block min-h-[20px] mb-4">Spin to determine your clearance tier</span>
             <div class="relative w-64 h-64 mx-auto my-6">
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-right-[12px] border-r-transparent border-top-[24px] border-t-amber-400 z-20 drop-shadow-md"></div>
-                <canvas id="wheel" width="500" height="500" style="transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);" class="w-full h-full rounded-full border-4 border-slate-900 shadow-2xl shadow-black"></canvas>
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[24px] border-t-amber-400 z-20"></div>
+                <canvas id="wheel" width="500" height="500" style="transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);" class="w-full h-full rounded-full border-4 border-slate-900 shadow-2xl"></canvas>
             </div>
-            
-            <button id="spinBtn" onclick="spinWheel()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Trigger Spin
-            </button>
-            <p id="leftSpins" class="text-xs text-slate-500 font-light mt-4">Clearance Attempts Remaining: 3</p>
-            
-            <button id="nextToLvl4" onclick="changeScreen('lvl3', 'lvl4')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Proceed to Matrix
-            </button>
+            <button id="spinBtn" onclick="spinWheel()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Trigger Spin</button>
+            <p id="leftSpins" class="text-xs text-slate-500 mt-4">Attempts Remaining: 3</p>
+            <button id="nextToLvl4" onclick="changeScreen('lvl3', 'lvl4')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Proceed to Matrix</button>
         </div>
     </div>
 
     <div id="lvl4" style="display: none; width: 100%;">
         <div class="luxury-card">
             <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-2 font-medium">Protocol 03/04</div>
-            <h2 style="font-family: 'Cinzel', serif;" class="text-2xl text-amber-100 mb-2">The Matrix Grid</h2>
-            <span id="matrix-msg" class="text-xs text-slate-400 font-light block mb-6">Match the twin golden relics to decode data</span>
-            
-            <div class="grid grid-cols-2 gap-4 max-w-[240px] mx-auto mb-6">
-                <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '👑')">
-                    <div class="card-inner">
-                        <div class="card-face card-front"><span class="text-amber-400/30 text-xl" style="font-family: 'Cinzel', serif;">?</span></div>
-                        <div class="card-face card-back">👑</div>
-                    </div>
-                </div>
-                <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '💎')">
-                    <div class="card-inner">
-                        <div class="card-face card-front"><span class="text-amber-400/30 text-xl" style="font-family: 'Cinzel', serif;">?</span></div>
-                        <div class="card-face card-back">💎</div>
-                    </div>
-                </div>
-                <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '👑')">
-                    <div class="card-inner">
-                        <div class="card-face card-front"><span class="text-amber-400/30 text-xl" style="font-family: 'Cinzel', serif;">?</span></div>
-                        <div class="card-face card-back">👑</div>
-                    </div>
-                </div>
-                <div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '💎')">
-                    <div class="card-inner">
-                        <div class="card-face card-front"><span class="text-amber-400/30 text-xl" style="font-family: 'Cinzel', serif;">?</span></div>
-                        <div class="card-face card-back">💎</div>
-                    </div>
-                </div>
-            </div>
-
-            <button id="nextToLvl5" onclick="changeScreen('lvl4', 'lvl5')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Proceed to Bypass
-            </button>
+            <h2 style="font-family:'Cinzel',serif;" class="text-2xl text-amber-100 mb-2">The Matrix Grid</h2>
+            <span id="matrix-msg" class="text-xs text-slate-400 block mb-6">Match the twin golden relics to decode data</span>
+            <div id="cardGrid" class="grid grid-cols-2 gap-4 max-w-[240px] mx-auto mb-6"></div>
+            <button id="nextToLvl5" onclick="changeScreen('lvl4', 'lvl5')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Proceed to Bypass</button>
         </div>
     </div>
+
     <div id="lvl5" style="display: none; width: 100%;">
         <div class="luxury-card">
             <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-2 font-medium">Protocol 04/04</div>
-            <h2 style="font-family: 'Cinzel', serif;" class="text-2xl text-amber-100 mb-1">Laser Bypass</h2>
-            <span id="lock-msg" class="text-xs text-slate-400 font-light block mb-6">Lock the node inside the center gold zone</span>
-            
+            <h2 style="font-family:'Cinzel',serif;" class="text-2xl text-amber-100 mb-1">Laser Bypass</h2>
+            <span id="lock-msg" class="text-xs text-slate-400 block mb-6">Lock the node inside the center gold zone</span>
             <div class="w-full h-8 bg-slate-950 rounded-full border border-slate-800 relative overflow-hidden mb-8">
                 <div class="absolute top-0 bottom-0 left-[40%] right-[40%] bg-amber-500/30 border-l border-r border-amber-400/60"></div>
-                <div id="laserPin" class="absolute top-0 bottom-0 w-2 bg-amber-400 shadow-[0_0_15px_#f59e0b] left-[0%] rounded-full"></div>
+                <div id="laserPin" class="absolute top-0 bottom-0 w-2 bg-amber-400 left-[0%] rounded-full shadow-[0_0_15px_#f59e0b]"></div>
             </div>
-
-            <button id="lockBtn" onclick="lockFrequency()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Lock Frequency
-            </button>
-
-            <button id="nextToLvl6" onclick="changeScreen('lvl5', 'lvl6')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
-                Open Terminal
-            </button>
+            <button id="lockBtn" onclick="lockFrequency()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Lock Frequency</button>
+            <button id="nextToLvl6" onclick="changeScreen('lvl5', 'lvl6')" style="display: none;" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow">Open Terminal</button>
         </div>
     </div>
 
     <div id="lvl6" style="display: none; width: 100%;">
         <div class="luxury-card max-w-lg">
             <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Vault Unlocked</div>
-            <h2 style="font-family: 'Cinzel', serif;" class="text-3xl text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-400 tracking-wide mb-2">
-                The Final Terminal
-            </h2>
-            <p class="text-slate-400 font-light text-sm mb-6">Unlocking complete. You can now establish a direct transmission link to Pankaj.</p>
-            
-            <textarea id="msgBody" placeholder="Type your secure response transmission here..." class="w-full h-32 rounded-xl bg-slate-950/80 border border-slate-800 p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400/60 font-light text-sm resize-none tracking-wide leading-relaxed shadow-inner"></textarea>
-            
-            <button onclick="transmitMail()" class="w-full py-4 rounded-xl bg-amber-500 text-slate-950 font-semibold tracking-[0.2em] text-xs uppercase gold-glow mt-6 active:scale-95">
-                Transmit Secure Telex
-            </button>
+            <h2 style="font-family:'Cinzel',serif;" class="text-3xl text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-400 mb-2">The Final Terminal</h2>
+            <p class="text-slate-400 text-sm mb-6">Unlocking complete. Direct transmission link to Pankaj established.</p>
+            <textarea id="msgBody" placeholder="Type your secure response..." class="w-full h-32 rounded-xl bg-slate-950/80 border border-slate-800 p-4 text-slate-100 focus:outline-none focus:border-amber-400/60 text-sm resize-none"></textarea>
+            <button onclick="transmitMail()" class="w-full py-4 rounded-xl bg-amber-500 text-slate-950 font-semibold tracking-[0.2em] text-xs uppercase gold-glow mt-6 cursor-pointer hover:bg-amber-400 transition-all">Transmit Secure Telex</button>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <script>
-        function changeScreen(currentId, nextId, playMusic = false) {
-            document.getElementById(currentId).style.display = 'none';
-            document.getElementById(nextId).style.display = 'block';
-
-            if (playMusic) {
-                try {
-                    let audio = document.getElementById('bgMusic');
-                    if(audio) audio.play().catch(e => console.log("Audio ignored"));
-                } catch(e) {}
+        // JS LOGIC
+        function changeScreen(curr, next, playMusic = false) {
+            document.getElementById(curr).style.display = 'none';
+            document.getElementById(next).style.display = 'block';
+            if(playMusic) {
+                try { let a = document.getElementById('bgMusic'); if(a) a.play().catch(e=>{}); } catch(e){}
             }
-
-            if (nextId === 'lvl5') {
-                setTimeout(startLaserGame, 100);
-            }
+            if(next === 'lvl5') setTimeout(startLaserGame, 100);
         }
 
-        function triggerMetallicConfetti() {
+        function fireConfetti() {
             try {
-                if (typeof confetti === 'function') {
-                    const colors = ['#d4af37', '#f59e0b', '#ffffff', '#aa7c11', '#cbd5e1'];
-                    confetti({ particleCount: 40, angle: 60, spread: 60, origin: { x: 0, y: 0.8 }, colors: colors });
-                    confetti({ particleCount: 40, angle: 120, spread: 60, origin: { x: 1, y: 0.8 }, colors: colors });
+                if(typeof confetti === 'function') {
+                    let c = ['#d4af37', '#f59e0b', '#fff'];
+                    confetti({ particleCount: 40, spread: 60, origin: { x: 0, y: 0.8 }, colors: c });
+                    confetti({ particleCount: 40, spread: 60, origin: { x: 1, y: 0.8 }, colors: c });
                 }
             } catch(e) {}
         }
 
+        // Challenge 1
         function dodgeButton() {
-            const btn = document.getElementById('noButton');
+            let btn = document.getElementById('noButton');
             btn.style.position = 'absolute';
             btn.style.left = (Math.random() * 50 + 10) + '%';
             btn.style.top = (Math.random() * 50 + 10) + '%';
             document.getElementById('qTitle').innerText = "Incorrect parameter! Try again... 😉";
         }
-
         function clearLvl2() {
-            document.getElementById('qTitle').innerText = "Validation Success. Parameter: Best Bhai. 👑";
+            document.getElementById('qTitle').innerText = "Validation Success. 👑";
             document.getElementById('qButtons').style.display = 'none';
             document.getElementById('nextToLvl3').style.display = 'block';
-            triggerMetallicConfetti();
+            fireConfetti();
         }
 
-        const canvas = document.getElementById('wheel');
-        const ctx = canvas.getContext('2d');
-        let spinCount = 0;
-        let wheelRotation = 0;
+        // Challenge 2
+        let spinCount = 0, wheelRot = 0;
+        const tOpt = ["Tier VIP", "Tier Null", "Tier Omega", "Tier Elite", "Tier Alpha", "Tier Reset"];
+        const tCol = ["#111827", "#1e293b", "#d4af37", "#111827", "#1e293b", "#475569"];
         
-        const tierOptions = [
-            { label: "Tier VIP", color: "#111827" },
-            { label: "Tier Null", color: "#1e293b" },
-            { label: "Tier Omega", color: "#d4af37" },
-            { label: "Tier Elite", color: "#111827" },
-            { label: "Tier Alpha", color: "#1e293b" },
-            { label: "Tier Reset", color: "#475569" }
-        ];
-
         function buildWheel() {
-            const segmentArc = (2 * Math.PI) / tierOptions.length;
-            for(let i=0; i<tierOptions.length; i++) {
-                ctx.beginPath();
-                ctx.fillStyle = tierOptions[i].color;
-                ctx.moveTo(250, 250);
-                ctx.arc(250, 250, 250, i * segmentArc, (i + 1) * segmentArc);
-                ctx.fill();
-                
-                ctx.save();
-                ctx.translate(250, 250);
-                ctx.rotate(i * segmentArc + segmentArc / 2);
-                ctx.fillStyle = tierOptions[i].color === "#d4af37" ? "#0f172a" : "#f1f5f9";
-                ctx.font = "bold 24px sans-serif";
-                ctx.textAlign = "right";
-                ctx.fillText(tierOptions[i].label, 220, 8);
+            let canvas = document.getElementById('wheel');
+            if(!canvas) return;
+            let ctx = canvas.getContext('2d');
+            let arc = (2 * Math.PI) / 6;
+            for(let i=0; i<6; i++) {
+                ctx.beginPath(); ctx.fillStyle = tCol[i];
+                ctx.moveTo(250, 250); ctx.arc(250, 250, 250, i * arc, (i + 1) * arc); ctx.fill();
+                ctx.save(); ctx.translate(250, 250); ctx.rotate(i * arc + arc / 2);
+                ctx.fillStyle = (i===2) ? "#0f172a" : "#fff";
+                ctx.font = "bold 24px sans-serif"; ctx.textAlign = "right"; ctx.fillText(tOpt[i], 220, 8);
                 ctx.restore();
             }
         }
@@ -264,101 +150,86 @@
 
         function spinWheel() {
             if(spinCount >= 3) return;
-            const btn = document.getElementById('spinBtn');
-            btn.disabled = true;
+            document.getElementById('spinBtn').disabled = true;
             spinCount++;
+            let target = (spinCount===1) ? 0 : (spinCount===2) ? 1 : 2;
+            let msg = (spinCount===1) ? "Tier VIP Granted! 💸" : (spinCount===2) ? "Node Nullified. 😜" : "Tier Omega Unlocked! 👑";
             
-            let targetIndex = 0;
-            let statusText = "";
+            let arcDeg = 360 / 6;
+            let offset = 270 - (target * arcDeg + arcDeg / 2);
+            wheelRot = Math.ceil(wheelRot / 360) * 360 + 1440 + offset;
             
-            if(spinCount === 1) { targetIndex = 0; statusText = "Authorized: Tier VIP Granted! 💸"; }
-            else if(spinCount === 2) { targetIndex = 1; statusText = "Access Blocked: Node Nullified. 😜"; }
-            else if(spinCount === 3) { targetIndex = 2; statusText = "CRITICAL HIT: Tier Omega Unlocked! 👑"; }
-            
-            const arcDeg = 360 / tierOptions.length;
-            const targetOffset = 270 - (targetIndex * arcDeg + arcDeg / 2);
-            wheelRotation = Math.ceil(wheelRotation / 360) * 360 + 360 * 4 + targetOffset;
-            
-            canvas.style.transform = `rotate(${wheelRotation}deg)`;
-            
+            document.getElementById('wheel').style.transform = `rotate(${wheelRot}deg)`;
             setTimeout(() => {
-                document.getElementById('spin-msg').innerText = statusText;
+                document.getElementById('spin-msg').innerText = msg;
                 document.getElementById('leftSpins').innerText = `Attempts Remaining: ${3 - spinCount}`;
-                
                 if(spinCount === 3) {
-                    triggerMetallicConfetti();
-                    btn.style.display = 'none';
+                    fireConfetti();
+                    document.getElementById('spinBtn').style.display = 'none';
                     document.getElementById('nextToLvl4').style.display = 'block';
                 } else {
-                    btn.disabled = false;
+                    document.getElementById('spinBtn').disabled = false;
                 }
             }, 4000);
         }
 
-        let openCards = [];
-        let completedPairs = 0;
-        function selectCard(cardEl, value) {
-            if(cardEl.classList.contains('flipped') || openCards.length >= 2) return;
-            
-            cardEl.classList.add('flipped');
-            openCards.push({ element: cardEl, val: value });
-            
+        // Challenge 3
+        let grid = document.getElementById('cardGrid');
+        if(grid) {
+            ['👑','💎','👑','💎'].forEach(sym => {
+                grid.innerHTML += `<div class="memory-card w-24 h-28 [perspective:1000px] cursor-pointer" onclick="selectCard(this, '${sym}')"><div class="card-inner"><div class="card-face card-front"><span class="text-amber-400/30 text-xl font-serif">?</span></div><div class="card-face card-back">${sym}</div></div></div>`;
+            });
+        }
+
+        let openCards = [], matched = 0;
+        function selectCard(el, val) {
+            if(el.classList.contains('flipped') || openCards.length >= 2) return;
+            el.classList.add('flipped');
+            openCards.push({ el, val });
             if(openCards.length === 2) {
                 if(openCards[0].val === openCards[1].val) {
-                    completedPairs++;
-                    openCards = [];
-                    if(completedPairs === 2) {
+                    matched++; openCards = [];
+                    if(matched === 2) {
                         document.getElementById('matrix-msg').innerText = "Matrix Decoded Successfully.";
                         document.getElementById('matrix-msg').style.color = "#d4af37";
                         document.getElementById('nextToLvl5').style.display = 'block';
-                        triggerMetallicConfetti();
+                        fireConfetti();
                     }
                 } else {
                     setTimeout(() => {
-                        openCards[0].element.classList.remove('flipped');
-                        openCards[1].element.classList.remove('flipped');
+                        openCards[0].el.classList.remove('flipped');
+                        openCards[1].el.classList.remove('flipped');
                         openCards = [];
                     }, 1000);
                 }
             }
         }
 
-        let positionX = 0;
-        let movingForward = true;
-        let gameLoopId = null;
-        let isBypassed = false;
-
+        // Challenge 4
+        let posX = 0, dir = 1, loopId = null, bypass = false;
         function startLaserGame() {
-            if(gameLoopId) cancelAnimationFrame(gameLoopId);
-            const pin = document.getElementById('laserPin');
-            
-            function animateLaser() {
-                if(isBypassed) return;
-                
-                if(movingForward) {
-                    positionX += 2;
-                    if(positionX >= 98) movingForward = false;
-                } else {
-                    positionX -= 2;
-                    if(positionX <= 0) movingForward = true;
-                }
-                pin.style.left = positionX + '%';
-                gameLoopId = requestAnimationFrame(animateLaser);
+            if(loopId) cancelAnimationFrame(loopId);
+            let pin = document.getElementById('laserPin');
+            function anim() {
+                if(bypass) return;
+                posX += 2 * dir;
+                if(posX >= 98 || posX <= 0) dir *= -1;
+                pin.style.left = posX + '%';
+                loopId = requestAnimationFrame(anim);
             }
-            gameLoopId = requestAnimationFrame(animateLaser);
+            loopId = requestAnimationFrame(anim);
         }
 
         function lockFrequency() {
-            if(isBypassed) return;
-            cancelAnimationFrame(gameLoopId);
-            
-            if(positionX >= 38 && positionX <= 62) {
-                isBypassed = true;
+            if(bypass) return;
+            cancelAnimationFrame(loopId);
+            if(posX >= 38 && posX <= 62) {
+                bypass = true;
                 document.getElementById('lock-msg').innerText = "Frequency Sync Lock: Secured.";
                 document.getElementById('lock-msg').style.color = "#d4af37";
                 document.getElementById('lockBtn').style.display = 'none';
                 document.getElementById('nextToLvl6').style.display = 'block';
-                triggerMetallicConfetti();
+                fireConfetti();
             } else {
                 document.getElementById('lock-msg').innerText = "Node Alignment Failed. Recalibrating...";
                 document.getElementById('lock-msg').style.color = "#ef4444";
@@ -370,9 +241,10 @@
             }
         }
 
+        // Final
         function transmitMail() {
-            const dataPayload = document.getElementById('msgBody').value;
-            window.location.href = `mailto:1733pankaj@gmail.com?subject=Secure Telex Response 🔐&body=${encodeURIComponent(dataPayload)}`;
+            let msg = document.getElementById('msgBody').value;
+            window.location.href = `mailto:1733pankaj@gmail.com?subject=Secure Telex Response 🔐&body=${encodeURIComponent(msg)}`;
         }
     </script>
 </body>
