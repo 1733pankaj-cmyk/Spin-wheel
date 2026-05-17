@@ -1,278 +1,356 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bhai's Surprise Spin</title>
+    <title>The Premium Experience</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                serif: ['Cinzel', 'serif'],
+              }
+            }
+          }
+        }
+    </script>
     
     <style>
-        :root {
-            --primary: #4f46e5;
-            --success: #10b981;
-            --danger: #ef4444;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --bg: #f9fafb;
-        }
-
-        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(circle at 15% 15%, #e0e7ff 0%, transparent 35%),
-                              radial-gradient(circle at 85% 85%, #fef3c7 0%, transparent 35%);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            background-color: #080b11;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
         }
-
-        .card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-            width: 90%;
-            max-width: 440px;
-            text-align: center;
-            position: absolute;
-            opacity: 0;
-            transform: translateY(25px) scale(0.96);
-            pointer-events: none;
-            border: 1px solid rgba(0,0,0,0.03);
+        .luxury-card {
+            background: rgba(15, 22, 36, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(214, 175, 54, 0.15);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
         }
-
-        .card.active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-            z-index: 10;
+        .gold-glow {
+            box-shadow: 0 0 30px rgba(214, 175, 54, 0.2);
         }
-
-        h1, h2 { font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 0; }
-        p { color: var(--text-muted); line-height: 1.6; font-size: 1.05rem; }
-
-        /* Professional Styled Buttons */
-        .btn {
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            padding: 0.9rem 1.8rem;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
+        .gold-glow-hover:hover {
+            box-shadow: 0 0 40px rgba(214, 175, 54, 0.4);
+            border-color: rgba(214, 175, 54, 0.6);
         }
-
-        .btn-next { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2); }
-        .btn-next:hover { transform: translateY(-2px); background: #4338ca; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3); }
-        
-        .btn-yes { background: var(--success); color: white; min-width: 120px; }
-        .btn-no { background: var(--danger); color: white; min-width: 120px; position: relative; }
-
-        .hidden-item { display: none !important; }
-
-        /* Wheel Styles */
-        .wheel-area {
-            position: relative;
-            width: 290px;
-            height: 290px;
-            margin: 1.5rem auto;
+        .card-inner {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .pointer-arrow {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #1f2937;
-            z-index: 20;
+        .memory-card.flipped .card-inner {
+            transform: rotateY(180deg);
         }
-
-        canvas {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            border: 6px solid #1f2937;
-            transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1);
-        }
-
-        textarea {
-            width: 100%; height: 110px;
-            border-radius: 12px;
-            padding: 1rem;
-            border: 1px solid #d1d5db;
-            font-family: 'Inter', sans-serif;
-            margin-top: 1rem;
-            resize: none;
-            outline: none;
-            font-size: 1rem;
-        }
-        textarea:focus { border-color: var(--primary); ring: 2px solid var(--primary); }
-
-        #spin-msg { font-weight: 600; color: var(--primary); display: block; min-height: 1.5rem; margin-bottom: 0.5rem; }
     </style>
 </head>
-<body>
+<body class="min-h-screen text-slate-200 font-sans flex items-center justify-center overflow-hidden relative px-4">
 
     <audio id="bgMusic" loop>
-        <source src="music.mp3" type="audio/mpeg">
+        <source src="audio.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="step1" class="card active">
-        <h1>Surprise for You! 🎁</h1>
-        <p>I have planned something special for you. Kya aap taiyaar hain?</p>
-        <button class="btn btn-next" onclick="moveFrame('step1', 'step2', true)">Next: Start Karo</button>
+    <div id="lvl1" class="luxury-card w-full max-w-md rounded-[2rem] p-10 text-center absolute scale-100 opacity-100 z-10 pointer-events-auto">
+        <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Exclusive Access</div>
+        <h1 class="font-serif text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-amber-200 to-amber-500 tracking-wide mb-6">
+            The Vault
+        </h1>
+        <div class="w-12 h-[1px] bg-amber-400/30 mx-auto mb-6"></div>
+        <p class="text-slate-400 font-light leading-relaxed mb-8 text-sm md:text-base">
+            Greetings. Someone has initiated a highly customized, multi-level interactive experience exclusively for you. 
+        </p>
+        <button onclick="moveLevel('lvl1', 'lvl2', true)" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover active:scale-95">
+            Initialize Protocol
+        </button>
     </div>
 
-    <div id="step2" class="card">
-        <h2 id="qTitle">Kya main best bhai hoon? 🤔</h2>
-        <div id="qButtons" style="margin-top: 2rem;">
-            <button class="btn btn-yes" onclick="correctChoice()">Haan!</button>
-            <button id="noButton" class="btn btn-no" onmouseover="btnRun()">Nahi</button>
+    <div id="lvl2" class="luxury-card w-full max-w-md rounded-[2rem] p-10 text-center absolute scale-95 opacity-0 z-0 pointer-events-none">
+        <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Protocol 01/04</div>
+        <h2 id="qTitle" class="font-serif text-2xl text-amber-100 mb-8 min-h-[64px]">Is Pankaj the ultimate brother on this planet?</h2>
+        <div id="qButtons" class="flex flex-col sm:flex-row justify-center gap-4 mb-2">
+            <button onclick="clearLvl2()" class="px-8 py-3 rounded-xl bg-amber-500 text-slate-950 font-semibold text-sm uppercase tracking-wider hover:bg-amber-400 gold-glow">
+                Absolutely
+            </button>
+            <button id="noButton" onmouseover="dodgeButton()" onclick="dodgeButton()" class="px-8 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 font-medium text-sm uppercase tracking-wider">
+                Debatable
+            </button>
         </div>
-        <button id="nextToWheel" class="btn btn-next hidden-item" onclick="moveFrame('step2', 'step3')">Next: Spin the Wheel</button>
+        <button id="nextToLvl3" onclick="moveLevel('lvl2', 'lvl3')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+            Proceed to Sphere
+        </button>
     </div>
 
-    <div id="step3" class="card">
-        <span id="spin-msg">Spin karke dekho kya jeet-te ho!</span>
-        <div class="wheel-area">
-            <div class="pointer-arrow"></div>
-            <canvas id="wheel" width="500" height="500"></canvas>
-        </div>
-        <button id="spinBtn" class="btn btn-next" onclick="spinMe()">SPIN NOW</button>
-        <p id="leftSpins" style="font-size: 0.9rem;">Remaining: 3 spins</p>
+    <div id="lvl3" class="luxury-card w-full max-w-md rounded-[2rem] p-10 text-center absolute scale-95 opacity-0 z-0 pointer-events-none">
+        <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-2 font-medium">Protocol 02/04</div>
+        <h2 class="font-serif text-2xl text-amber-100 mb-1">Sphere of Fortune</h2>
+        <span id="spin-msg" class="text-xs text-amber-400/60 tracking-wider block min-h-[20px] mb-4">Spin to determine your clearance tier</span>
         
-        <button id="nextToMsg" class="btn btn-next hidden-item" onclick="moveFrame('step3', 'step4')">Next: Final Step</button>
+        <div class="relative w-64 h-64 mx-auto my-6">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-right-[12px] border-r-transparent border-top-[24px] border-t-amber-400 z-20 drop-shadow-md"></div>
+            <canvas id="wheel" width="500" height="500" class="w-full h-full rounded-full border-4 border-slate-900 shadow-2xl shadow-black"></canvas>
+        </div>
+        
+        <button id="spinBtn" onclick="spinWheel()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
+            Trigger Spin
+        </button>
+        <p id="leftSpins" class="text-xs text-slate-500 font-light mt-4">Clearance Attempts Remaining: 3</p>
+        
+        <button id="nextToLvl4" onclick="moveLevel('lvl3', 'lvl4')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+            Proceed to Matrix
+        </button>
     </div>
 
-    <div id="step4" class="card">
-        <h2>Message for Pankaj ❤️</h2>
-        <p>Kaisa laga surprise? Apna feedback neeche likhein.</p>
-        <textarea id="msgBody" placeholder="Type your message here..."></textarea>
-        <button class="btn btn-next" onclick="sendMail()">Finish & Send Email</button>
+    <div id="lvl4" class="luxury-card w-full max-w-md rounded-[2rem] p-10 text-center absolute scale-95 opacity-0 z-0 pointer-events-none">
+        <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-2 font-medium">Protocol 03/04</div>
+        <h2 class="font-serif text-2xl text-amber-100 mb-2">The Matrix Grid</h2>
+        <span id="matrix-msg" class="text-xs text-slate-400 font-light block mb-6">Match the twin golden relics to decode data</span>
+        
+        <div class="grid grid-cols-2 gap-4 max-w-[240px] mx-auto mb-6">
+            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '👑')">
+                <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
+                    <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
+                    <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">👑</div>
+                </div>
+            </div>
+            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '💎')">
+                <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
+                    <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
+                    <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">💎</div>
+                </div>
+            </div>
+            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '👑')">
+                <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
+                    <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
+                    <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">👑</div>
+                </div>
+            </div>
+            <div class="memory-card w-24 h-28 [perspective:1000px]" onclick="selectCard(this, '💎')">
+                <div class="card-inner relative w-full h-full text-center [transform-style:preserve-3d]">
+                    <div class="absolute inset-0 bg-slate-900 border border-slate-800 rounded-xl [backface-visibility:hidden] flex items-center justify-center text-amber-400/30 text-xl font-serif font-bold">?</div>
+                    <div class="absolute inset-0 bg-[#161f30] border border-amber-400/40 rounded-xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-3xl">💎</div>
+                </div>
+            </div>
+        </div>
+
+        <button id="nextToLvl5" onclick="moveLevel('lvl4', 'lvl5')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+            Proceed to Bypass
+        </button>
+    </div>
+
+    <div id="lvl5" class="luxury-card w-full max-w-md rounded-[2rem] p-10 text-center absolute scale-95 opacity-0 z-0 pointer-events-none">
+        <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-2 font-medium">Protocol 04/04</div>
+        <h2 class="font-serif text-2xl text-amber-100 mb-1">Laser Bypass</h2>
+        <span id="lock-msg" class="text-xs text-slate-400 font-light block mb-6">Lock in the frequency node when inside the gold center zone</span>
+        
+        <div class="w-full h-6 bg-slate-950 rounded-full border border-slate-800 relative overflow-hidden mb-8">
+            <div class="absolute top-0 bottom-0 left-[42%] right-[42%] bg-amber-500/30 border-l border-r border-amber-400/60"></div>
+            <div id="laserPin" class="absolute top-0 bottom-0 w-1 bg-amber-400 shadow-[0_0_10px_#f59e0b] left-[0%]"></div>
+        </div>
+
+        <button id="lockBtn" onclick="lockFrequency()" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover">
+            Lock Frequency Node
+        </button>
+
+        <button id="nextToLvl6" onclick="moveLevel('lvl5', 'lvl6')" class="w-full py-4 rounded-xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-amber-500/20 text-amber-200 font-medium tracking-[0.2em] text-xs uppercase gold-glow-hover hidden">
+            Open Terminal
+        </button>
+    </div>
+
+    <div id="lvl6" class="luxury-card w-full max-w-lg rounded-[2rem] p-10 text-center absolute scale-95 opacity-0 z-0 pointer-events-none">
+        <div class="text-xs tracking-[0.4em] uppercase text-amber-400/60 mb-3 font-medium">Vault Unlocked</div>
+        <h2 class="font-serif text-3xl text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-400 tracking-wide mb-2">
+            The Final Terminal
+        </h2>
+        <p class="text-slate-400 font-light text-sm mb-6">Unlocking complete. You can now establish a direct transmission link to Pankaj.</p>
+        
+        <textarea id="msgBody" placeholder="Type your secure response transmission here..." class="w-full h-32 rounded-xl bg-slate-950/80 border border-slate-800 p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400/60 font-light text-sm resize-none tracking-wide leading-relaxed shadow-inner"></textarea>
+        
+        <button onclick="transmitMail()" class="w-full py-4 rounded-xl bg-amber-500 text-slate-950 font-semibold tracking-[0.2em] text-xs uppercase gold-glow mt-6 active:scale-95">
+            Transmit Secure Telex
+        </button>
     </div>
 
     <script>
+        // --- Safe Navigation System (Bulletproof) ---
+        function moveLevel(currentId, nextId, startMusic = false) {
+            try {
+                if(startMusic) {
+                    let audio = document.getElementById('bgMusic');
+                    if(audio) {
+                        let playPromise = audio.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => { console.log("Audio play prevented by browser"); });
+                        }
+                    }
+                }
+            } catch(e) { console.log(e); }
+            
+            const currEl = document.getElementById(currentId);
+            const nextEl = document.getElementById(nextId);
+            
+            currEl.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+            currEl.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+            currEl.style.zIndex = "0";
+            
+            setTimeout(() => {
+                nextEl.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+                nextEl.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                nextEl.style.zIndex = "10";
+                
+                if(nextId === 'lvl5') startLaserGame();
+            }, 400);
+        }
+
+        // --- Challenge 1 Logic ---
+        function dodgeButton() {
+            const btn = document.getElementById('noButton');
+            btn.style.position = 'fixed';
+            btn.style.left = (Math.random() * 50 + 20) + '%';
+            btn.style.top = (Math.random() * 50 + 20) + '%';
+            document.getElementById('qTitle').innerText = "Incorrect matrix input! Analyze parameters again... 😉";
+        }
+        function clearLvl2() {
+            document.getElementById('qTitle').innerText = "System validation success. Parameter defined: Best Bhai. 👑";
+            document.getElementById('qButtons').classList.add('hidden');
+            document.getElementById('nextToLvl3').classList.remove('hidden');
+            triggerMetallicConfetti();
+        }
+
+        // --- Challenge 2 Logic ---
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
-        const music = document.getElementById('bgMusic');
-        let rotation = 0;
-        let count = 0;
-
-        const prizeOptions = [
-            { label: "₹5 UPI", color: "#6366f1" },
-            { label: "Better Luck", color: "#94a3b8" },
-            { label: "Golden Poop 💩", color: "#f59e0b" },
-            { label: "Chocolate", color: "#ec4899" },
-            { label: "Party Time", color: "#10b981" },
-            { label: "Try Again", color: "#475569" }
+        let spinCount = 0;
+        let wheelRotation = 0;
+        
+        const tierOptions = [
+            { label: "Tier VIP", color: "#111827" },
+            { label: "Tier Null", color: "#1e293b" },
+            { label: "Tier Omega", color: "#d4af37" },
+            { label: "Tier Elite", color: "#111827" },
+            { label: "Tier Alpha", color: "#1e293b" },
+            { label: "Tier Reset", color: "#475569" }
         ];
 
-        function drawWheel() {
-            const arc = (2 * Math.PI) / prizeOptions.length;
-            prizeOptions.forEach((p, i) => {
+        function buildWheel() {
+            const segmentArc = (2 * Math.PI) / tierOptions.length;
+            tierOptions.forEach((opt, idx) => {
                 ctx.beginPath();
-                ctx.fillStyle = p.color;
+                ctx.fillStyle = opt.color;
                 ctx.moveTo(250, 250);
-                ctx.arc(250, 250, 250, i * arc, (i + 1) * arc);
+                ctx.arc(250, 250, 250, idx * segmentArc, (idx + 1) * segmentArc);
                 ctx.fill();
+                
                 ctx.save();
                 ctx.translate(250, 250);
-                ctx.rotate(i * arc + arc/2);
-                ctx.fillStyle = "white";
-                ctx.font = "bold 26px Inter";
+                ctx.rotate(idx * segmentArc + segmentArc / 2);
+                ctx.fillStyle = opt.color === "#d4af37" ? "#0f172a" : "#f1f5f9";
+                ctx.font = "bold 24px Plus Jakarta Sans";
                 ctx.textAlign = "right";
-                ctx.fillText(p.label, 230, 10);
+                ctx.fillText(opt.label, 220, 8);
                 ctx.restore();
             });
         }
-        drawWheel();
+        buildWheel();
 
-        function moveFrame(curr, next, playAudio = false) {
-            if(playAudio) music.play().catch(() => {});
-            document.getElementById(curr).classList.remove('active');
-            setTimeout(() => {
-                document.getElementById(next).classList.add('active');
-            }, 450);
-        }
-
-        function btnRun() {
-            const btn = document.getElementById('noButton');
-            btn.style.position = 'fixed';
-            btn.style.left = Math.random() * 70 + 15 + '%';
-            btn.style.top = Math.random() * 70 + 15 + '%';
-            document.getElementById('qTitle').innerText = "Wrong answer! Dubara socho... 😂";
-        }
-
-        function correctChoice() {
-            document.getElementById('qTitle').innerText = "I knew it! Main hi best hoon. 😎👑";
-            document.getElementById('qButtons').classList.add('hidden-item');
-            document.getElementById('nextToWheel').classList.remove('hidden-item');
-        }
-
-        function spinMe() {
-            if (count >= 3) return;
-            const btn = document.getElementById('spinBtn');
-            btn.disabled = true;
-            count++;
-
-            let target = 0;
-            let feedback = "";
-
-            if (count === 1) { target = 0; feedback = "Wah! You won ₹5 UPI! 💸"; }
-            else if (count === 2) { target = 1; feedback = "Oops! Better Luck Next Time! 😜"; }
-            else if (count === 3) { target = 2; feedback = "JACKPOT! Golden Poop 💩 Mila!"; }
-
-            const segAngle = 360 / prizeOptions.length;
-            const stopPoint = 270 - (target * segAngle + segAngle / 2);
-            const rotateVal = 360 * 5 + stopPoint;
+        function spinWheel() {
+            if(spinCount >= 3) return;
+            document.getElementById('spinBtn').disabled = true;
+            spinCount++;
             
-            const finalRot = Math.ceil(rotation / 360) * 360 + rotateVal;
-            rotation = finalRot;
-            canvas.style.transform = `rotate(${rotation}deg)`;
-
+            let targetIndex = 0;
+            let statusText = "";
+            
+            if(spinCount === 1) { targetIndex = 0; statusText = "Clearance Authorized: Tier VIP Granted! 💸"; }
+            else if(spinCount === 2) { targetIndex = 1; statusText = "Access Blocked: Node Nullified. 😜"; }
+            else if(spinCount === 3) { targetIndex = 2; statusText = "CRITICAL VAULT HIT: Tier Omega Unlocked! 👑"; }
+            
+            const arcDeg = 360 / tierOptions.length;
+            const targetOffset = 270 - (targetIndex * arcDeg + arcDeg / 2);
+            const totalRotation = 360 * 4 + targetOffset;
+            
+            const computedRotation = Math.ceil(wheelRotation / 360) * 360 + totalRotation;
+            wheelRotation = computedRotation;
+            canvas.style.transform = `rotate(${wheelRotation}deg)`;
+            
             setTimeout(() => {
-                document.getElementById('spin-msg').innerText = feedback;
-                document.getElementById('leftSpins').innerText = `Remaining: ${3 - count} spins`;
+                document.getElementById('spin-msg').innerText = statusText;
+                document.getElementById('leftSpins').innerText = `Clearance Attempts Remaining: ${3 - spinCount}`;
                 
-                if (count === 3) {
-                    showFirecrackers();
-                    btn.classList.add('hidden-item');
-                    document.getElementById('nextToMsg').classList.remove('hidden-item');
+                if(spinCount === 3) {
+                    triggerMetallicConfetti();
+                    document.getElementById('spinBtn').classList.add('hidden');
+                    document.getElementById('nextToLvl4').classList.remove('hidden');
                 } else {
-                    btn.disabled = false;
+                    document.getElementById('spinBtn').disabled = false;
                 }
             }, 4000);
         }
 
-        function showFirecrackers() {
-            const end = Date.now() + 3000;
-            (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#4f46e5', '#10b981'] });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#4f46e5', '#10b981'] });
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
+        // --- Challenge 3 Logic ---
+        let openCards = [];
+        let completedPairs = 0;
+        function selectCard(cardEl, value) {
+            if(cardEl.classList.contains('flipped') || openCards.length >= 2) return;
+            
+            cardEl.classList.add('flipped');
+            openCards.push({ element: cardEl, val: value });
+            
+            if(openCards.length === 2) {
+                if(openCards[0].val === openCards[1].val) {
+                    completedPairs++;
+                    openCards = [];
+                    if(completedPairs === 2) {
+                        document.getElementById('matrix-msg').innerText = "Matrix Decoded Successfully.";
+                        document.getElementById('matrix-msg').style.color = "#d4af37";
+                        document.getElementById('nextToLvl5').classList.remove('hidden');
+                        triggerMetallicConfetti();
+                    }
+                } else {
+                    setTimeout(() => {
+                        openCards[0].element.classList.remove('flipped');
+                        openCards[1].element.classList.remove('flipped');
+                        openCards = [];
+                    }, 1000);
+                }
+            }
         }
 
-        function sendMail() {
-            const text = document.getElementById('msgBody').value;
-            window.location.href = `mailto:1733pankaj@Gmail.com?subject=Surprise Response&body=${encodeURIComponent(text)}`;
+        // --- Challenge 4 Logic ---
+        let positionX = 0;
+        let movingForward = true;
+        let gameLoopId = null;
+        let isBypassed = false;
+
+        function startLaserGame() {
+            const pin = document.getElementById('laserPin');
+            function animateLaser() {
+                if(isBypassed) return;
+                
+                if(movingForward) {
+                    positionX += 1.5;
+                    if(positionX >= 100) movingForward = false;
+                } else {
+                    positionX -= 1.5;
+                    if(positionX <= 0) movingForward = true;
+                }
+                pin.style.left = positionX + '%';
+                gameLoopId = requestAnimationFrame(animateLaser);
+            }
+            gameLoopId = requestAnimationFrame(animateLaser);
         }
-    </script>
-</body>
-</html>
+
+        function lockFrequency() {
+            if(isBypassed) return;
+  
